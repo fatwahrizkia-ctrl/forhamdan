@@ -8,6 +8,8 @@ export default function Home() {
   const [extra, setExtra] = useState("");
   const [openDates, setOpenDates] = useState<string[]>([]);
 
+  const targetBulanan = 3000000;
+
   useEffect(() => {
     const saved = localStorage.getItem("keuangan-hamdan");
     if (saved) setData(JSON.parse(saved));
@@ -62,6 +64,9 @@ export default function Home() {
     localStorage.setItem("keuangan-hamdan", JSON.stringify(updated));
   };
 
+  const totalTabunganTerkumpul = data.reduce((sum, item) => sum + item.tabungan + item.e, 0);
+  const sisaTarget = Math.max(0, targetBulanan - totalTabunganTerkumpul);
+
   const toggleDate = (date: string) => {
     setOpenDates(prev => prev.includes(date) ? prev.filter(d => d !== date) : [...prev, date]);
   };
@@ -74,6 +79,13 @@ export default function Home() {
   return (
     <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen">
       <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
+      
+      {/* Panel Target Tabungan */}
+      <div className="bg-blue-600 text-white p-4 rounded-lg mb-4">
+        <p className="text-sm">Sisa Target Tabungan 3jt:</p>
+        <h2 className="text-2xl font-bold">Rp {sisaTarget.toLocaleString('id-ID')}</h2>
+      </div>
+
       <div className="space-y-2 mb-6">
         <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
         <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
