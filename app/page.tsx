@@ -80,7 +80,6 @@ export default function Home() {
     setOpenDates(prev => prev.includes(date) ? prev.filter(d => d !== date) : [...prev, date]);
   };
 
-  // Kalkulasi Ringkasan
   const totalTabungan = data.reduce((sum, item) => sum + item.tabungan + item.e, 0);
   const totalService = data.reduce((sum, item) => sum + item.service, 0);
   const totalDanaDarurat = data.reduce((sum, item) => sum + item.danaDarurat, 0);
@@ -93,7 +92,6 @@ export default function Home() {
     <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen text-black">
       <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
       
-      {/* Ringkasan */}
       <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 text-sm shadow-lg">
         <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Ringkasan Dana Terkumpul:</h3>
         <p>Tabungan Sekarang: <b className="text-blue-300">Rp {totalTabungan.toLocaleString('id-ID')}</b></p>
@@ -101,7 +99,6 @@ export default function Home() {
         <p>Dana Darurat: <b className="text-green-300">Rp {totalDanaDarurat.toLocaleString('id-ID')}</b></p>
       </div>
 
-      {/* Target */}
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="bg-blue-600 text-white p-3 rounded-lg text-center shadow-md">
             <p className="text-[10px] uppercase font-bold">Sisa Target Tabungan</p>
@@ -113,7 +110,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Input */}
       <div className="space-y-2 mb-6 bg-white p-4 rounded shadow border">
         <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
         <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
@@ -121,7 +117,6 @@ export default function Home() {
         <button className="w-full bg-green-600 text-white p-2 rounded font-bold" onClick={handleProcess}>Proses Hari Ini</button>
       </div>
 
-      {/* List */}
       <div className="space-y-2">
         {Object.keys(grouped).map(date => (
           <div key={date} className="border rounded bg-white shadow-sm">
@@ -134,10 +129,10 @@ export default function Home() {
                   <div key={item.id} className="space-y-2">
                     <div className="flex justify-between"><span>Pemasukan:</span> <input className="border w-28 text-right px-1" defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
                     <div className="flex justify-between"><span>Ongkos:</span> <input className="border w-28 text-right px-1" defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
-                    <div className="flex justify-between"><span>Tab. Tambahan:</span> <input className="border w-28 text-right px-1" defaultValue={item.e.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} /></div>
                     <hr/>
                     <div className="flex justify-between"><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Tabungan (20%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Tab. Tambahan:</span> <input className="border w-28 text-right px-1" defaultValue={item.e !== undefined ? item.e.toLocaleString('id-ID') : "0"} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} /></div>
                     <div className="flex justify-between"><span>Service (5%):</span> <b>Rp {item.service.toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Dana Darurat (2%):</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
                     <div className="flex justify-between text-blue-700 font-bold"><span>Total Disisihkan:</span> <b>Rp {item.totalDisisihkan.toLocaleString()}</b></div>
