@@ -101,59 +101,58 @@ export default function Home() {
   }, {});
 
   return (
-    <main style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', padding: '1rem', color: '#000000' }}>
-      <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: '#000000' }}>Manajer Keuangan For Hamdan</h1>
-      
-      <div className="grid grid-cols-2 gap-2 mb-4">
-        <div className="bg-blue-600 text-white p-3 rounded-lg text-center shadow">
-            <p className="text-[10px] uppercase font-bold">Target Tabungan</p>
-            <h2 className="text-lg font-bold">Rp {sisaTargetTabungan.toLocaleString('id-ID')}</h2>
-        </div>
-        <div className="bg-orange-600 text-white p-3 rounded-lg text-center shadow">
-            <p className="text-[10px] uppercase font-bold">Target Service</p>
-            <h2 className="text-lg font-bold">Rp {sisaTargetService.toLocaleString('id-ID')}</h2>
-        </div>
-      </div>
-
-      <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #9ca3af', marginBottom: '1.5rem' }}>
-        <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
-        <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
-        <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Tabungan Tambahan..." value={extra} onChange={(e) => setExtra(formatRupiah(e.target.value))} />
-        <button style={{ width: '100%', backgroundColor: '#16a34a', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontWeight: 'bold' }} onClick={handleProcess}>Proses Hari Ini</button>
-      </div>
-
-      <div className="space-y-2">
-        {Object.keys(grouped).map(date => (
-          <div key={date} style={{ border: '1px solid #d1d5db', borderRadius: '0.5rem', backgroundColor: '#ffffff', marginBottom: '0.5rem' }}>
-            <button style={{ width: '100%', padding: '0.75rem', textAlign: 'left', fontWeight: 'bold', backgroundColor: '#e5e7eb', color: '#000000', display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleDate(date)}>
-              {date} <span>{openDates.includes(date) ? '▼' : '▶'}</span>
-            </button>
-            {openDates.includes(date) && (
-              <div style={{ padding: '1rem', borderTop: '1px solid #d1d5db', color: '#000000', fontSize: '0.875rem' }}>
-                {grouped[date].map((item: any) => (
-                  <div key={item.id} style={{ marginBottom: '0.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                        <span>Pemasukan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                        <span>Ongkos:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                        <span>Tabungan Tambahan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.e.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} />
-                    </div>
-                    <hr style={{ margin: '0.5rem 0' }}/>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tabungan:</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Service:</span> <b>Rp {item.service.toLocaleString()}</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Dana Darurat:</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}><span>Total Bersih:</span> <b style={{ color: '#15803d' }}>Rp {item.saldoBersih.toLocaleString()}</b></div>
-                    <button style={{ width: '100%', marginTop: '1rem', backgroundColor: '#ef4444', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold' }} onClick={() => deleteDate(date)}>HAPUS HARI INI</button>
-                  </div>
-                ))}
-              </div>
-            )}
+    <main style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', padding: '1rem' }}>
+      <div style={{ maxWidth: '480px', margin: '0 auto', color: '#000000' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: '#000000' }}>Manajer Keuangan For Hamdan</h1>
+        
+        {/* Grid Target */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div style={{ backgroundColor: '#2563eb', color: '#ffffff', padding: '0.75rem', borderRadius: '0.5rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+              <p style={{ fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 'bold' }}>Target Tabungan</p>
+              <h2 style={{ fontSize: '1rem', fontWeight: 'bold' }}>Rp {sisaTargetTabungan.toLocaleString('id-ID')}</h2>
           </div>
-        ))}
+          <div style={{ backgroundColor: '#ea580c', color: '#ffffff', padding: '0.75rem', borderRadius: '0.5rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+              <p style={{ fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 'bold' }}>Target Service</p>
+              <h2 style={{ fontSize: '1rem', fontWeight: 'bold' }}>Rp {sisaTargetService.toLocaleString('id-ID')}</h2>
+          </div>
+        </div>
+
+        {/* Input Form */}
+        <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #d1d5db', marginBottom: '1rem' }}>
+          <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
+          <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
+          <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Tabungan Tambahan..." value={extra} onChange={(e) => setExtra(formatRupiah(e.target.value))} />
+          <button style={{ width: '100%', backgroundColor: '#16a34a', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontWeight: 'bold' }} onClick={handleProcess}>Proses Hari Ini</button>
+        </div>
+
+        {/* List Data */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {Object.keys(grouped).map(date => (
+            <div key={date} style={{ border: '1px solid #d1d5db', borderRadius: '0.5rem', backgroundColor: '#ffffff' }}>
+              <button style={{ width: '100%', padding: '0.75rem', textAlign: 'left', fontWeight: 'bold', backgroundColor: '#e5e7eb', color: '#000000', display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleDate(date)}>
+                {date} <span>{openDates.includes(date) ? '▼' : '▶'}</span>
+              </button>
+              {openDates.includes(date) && (
+                <div style={{ padding: '1rem', borderTop: '1px solid #d1d5db', color: '#000000', fontSize: '0.875rem' }}>
+                  {grouped[date].map((item: any) => (
+                    <div key={item.id} style={{ marginBottom: '0.5rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}><span>Pemasukan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}><span>Ongkos:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}><span>Tabungan Tambahan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.e.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} /></div>
+                      <hr style={{ margin: '0.5rem 0' }}/>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tabungan:</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Service:</span> <b>Rp {item.service.toLocaleString()}</b></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Dana Darurat:</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}><span>Total Bersih:</span> <b style={{ color: '#15803d' }}>Rp {item.saldoBersih.toLocaleString()}</b></div>
+                      <button style={{ width: '100%', marginTop: '1rem', backgroundColor: '#ef4444', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold' }} onClick={() => deleteDate(date)}>HAPUS HARI INI</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
