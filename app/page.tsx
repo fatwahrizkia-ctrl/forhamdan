@@ -90,10 +90,10 @@ export default function Home() {
 
   return (
     <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen text-black">
-      <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
+      <h1 className="text-xl font-bold mb-4">Manajer Keuangan Untuk Hamdan</h1>
       
       <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 text-sm shadow-lg">
-        <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Semagaat sayang -kia:</h3>
+        <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Semangat Sayang -kia:</h3>
         <p>Tabungan Sekarang: <b className="text-blue-300">Rp {totalTabungan.toLocaleString('id-ID')}</b></p>
         <p>Service: <b className="text-orange-300">Rp {totalService.toLocaleString('id-ID')}</b></p>
         <p>Dana Darurat: <b className="text-green-300">Rp {totalDanaDarurat.toLocaleString('id-ID')}</b></p>
