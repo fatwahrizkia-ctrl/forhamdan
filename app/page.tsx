@@ -16,6 +16,7 @@ export default function Home() {
     if (saved) setData(JSON.parse(saved));
   }, []);
 
+  // ... (fungsi formatRupiah, handleProcess, updateItem, deleteDate, toggleDate tetap sama)
   const formatRupiah = (val: string) => {
     const number = val.replace(/\D/g, "");
     return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -26,25 +27,10 @@ export default function Home() {
     const o = parseFloat(ongkos.replace(/\./g, "")) || 0;
     const e = parseFloat(extra.replace(/\./g, "")) || 0;
     const date = new Date().toLocaleDateString("id-ID");
-
-    if (data.some(item => item.date === date)) {
-      alert("Hari ini sudah ada input!");
-      return;
-    }
-
+    if (data.some(item => item.date === date)) { alert("Hari ini sudah ada input!"); return; }
     let currentTotalService = data.reduce((sum, item) => sum + item.service, 0);
     const service = currentTotalService >= targetService ? 0 : p * 0.05;
-    
-    const entry = { 
-      id: Date.now(), date, p, o, e, 
-      saldoKotor: p - o,
-      tabungan: p * 0.2,
-      service,
-      danaDarurat: p * 0.02,
-      totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e,
-      saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e)
-    };
-    
+    const entry = { id: Date.now(), date, p, o, e, saldoKotor: p - o, tabungan: p * 0.2, service, danaDarurat: p * 0.02, totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e, saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e) };
     const newData = [entry, ...data];
     setData(newData);
     localStorage.setItem("keuangan-hamdan", JSON.stringify(newData));
@@ -54,25 +40,13 @@ export default function Home() {
   const updateItem = (id: number, key: string, val: string) => {
     const numVal = parseFloat(val.replace(/\./g, "")) || 0;
     let updatedData = data.map(item => (item.id === id ? { ...item, [key]: numVal } : item));
-    
     let totalServiceAccumulated = 0;
     updatedData = updatedData.sort((a, b) => a.id - b.id).map((item) => {
-      const p = item.p || 0;
-      const o = item.o || 0;
-      const e = item.e || 0;
+      const p = item.p || 0; const o = item.o || 0; const e = item.e || 0;
       const service = totalServiceAccumulated >= targetService ? 0 : p * 0.05;
       totalServiceAccumulated += service;
-      return { 
-        ...item, 
-        saldoKotor: p - o,
-        tabungan: p * 0.2,
-        service,
-        danaDarurat: p * 0.02,
-        totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e,
-        saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e)
-      };
+      return { ...item, saldoKotor: p - o, tabungan: p * 0.2, service, danaDarurat: p * 0.02, totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e, saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e) };
     });
-
     const finalData = updatedData.sort((a, b) => b.id - a.id);
     setData(finalData);
     localStorage.setItem("keuangan-hamdan", JSON.stringify(finalData));
@@ -86,35 +60,43 @@ export default function Home() {
     }
   };
 
-  const totalTabunganTerkumpul = data.reduce((sum, item) => sum + item.tabungan + item.e, 0);
-  const totalServiceTerkumpul = data.reduce((sum, item) => sum + item.service, 0);
-  const sisaTargetTabungan = Math.max(0, targetTabungan - totalTabunganTerkumpul);
-  const sisaTargetService = Math.max(0, targetService - totalServiceTerkumpul);
-
   const toggleDate = (date: string) => {
     setOpenDates(prev => prev.includes(date) ? prev.filter(d => d !== date) : [...prev, date]);
   };
 
-  const grouped = data.reduce((acc: any, curr) => {
-    (acc[curr.date] = acc[curr.date] || []).push(curr);
-    return acc;
-  }, {});
+  // Kalkulasi Ringkasan
+  const totalTabungan = data.reduce((sum, item) => sum + item.tabungan + item.e, 0);
+  const totalService = data.reduce((sum, item) => sum + item.service, 0);
+  const totalDanaDarurat = data.reduce((sum, item) => sum + item.danaDarurat, 0);
+
+  const sisaTargetTabungan = Math.max(0, targetTabungan - totalTabungan);
+  const sisaTargetService = Math.max(0, targetService - totalService);
+  const grouped = data.reduce((acc: any, curr) => { (acc[curr.date] = acc[curr.date] || []).push(curr); return acc; }, {});
 
   return (
     <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen text-black">
       <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
       
+      {/* Ringkasan Dana */}
+      <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 text-sm shadow-lg">
+        <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Ringkasan Dana Terkumpul:</h3>
+        <p>Tabungan Sekarang: <b className="text-blue-300">Rp {totalTabungan.toLocaleString('id-ID')}</b></p>
+        <p>Service: <b className="text-orange-300">Rp {totalService.toLocaleString('id-ID')}</b></p>
+        <p>Dana Darurat: <b className="text-green-300">Rp {totalDanaDarurat.toLocaleString('id-ID')}</b></p>
+      </div>
+
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="bg-blue-600 text-white p-3 rounded-lg text-center shadow-md">
-            <p className="text-[10px] uppercase font-bold">Target Tabungan</p>
+            <p className="text-[10px] uppercase font-bold">Sisa Target Tabungan</p>
             <h2 className="text-lg font-bold">Rp {sisaTargetTabungan.toLocaleString('id-ID')}</h2>
         </div>
         <div className="bg-orange-600 text-white p-3 rounded-lg text-center shadow-md">
-            <p className="text-[10px] uppercase font-bold">Target Service</p>
+            <p className="text-[10px] uppercase font-bold">Sisa Target Service</p>
             <h2 className="text-lg font-bold">Rp {sisaTargetService.toLocaleString('id-ID')}</h2>
         </div>
       </div>
 
+      {/* Input Section */}
       <div className="space-y-2 mb-6 bg-white p-4 rounded shadow border">
         <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
         <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
@@ -122,6 +104,7 @@ export default function Home() {
         <button className="w-full bg-green-600 text-white p-2 rounded font-bold" onClick={handleProcess}>Proses Hari Ini</button>
       </div>
 
+      {/* List Data Section (tetap seperti sebelumnya) */}
       <div className="space-y-2">
         {Object.keys(grouped).map(date => (
           <div key={date} className="border rounded bg-white shadow-sm">
@@ -140,9 +123,7 @@ export default function Home() {
                     <div className="flex justify-between"><span>Tabungan (20%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Service (5%):</span> <b>Rp {item.service.toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Dana Darurat (2%):</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
-                    {/* Disini baris yang kamu mau balik lagi */}
                     <div className="flex justify-between text-blue-700 font-bold"><span>Total Disisihkan:</span> <b>Rp {item.totalDisisihkan.toLocaleString()}</b></div>
-                    {/* Saldo Bersih diperbesar */}
                     <div className="flex justify-between text-green-700 font-bold text-lg mt-2">
                         <span>Total Bersih:</span> <b>Rp {item.saldoBersih.toLocaleString()}</b>
                     </div>
