@@ -78,7 +78,6 @@ export default function Home() {
     localStorage.setItem("keuangan-hamdan", JSON.stringify(finalData));
   };
 
-  // Fungsi hapus data per tanggal
   const deleteDate = (date: string) => {
     if (confirm(`Hapus semua data untuk tanggal ${date}?`)) {
       const filtered = data.filter(item => item.date !== date);
@@ -102,48 +101,47 @@ export default function Home() {
   }, {});
 
   return (
-    <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen">
-      <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
+    <main style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', padding: '1rem', color: '#000000' }}>
+      <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: '#000000' }}>Manajer Keuangan For Hamdan</h1>
+      
       <div className="grid grid-cols-2 gap-2 mb-4">
-        <div className="bg-blue-600 text-white p-3 rounded-lg text-center">
+        <div className="bg-blue-600 text-white p-3 rounded-lg text-center shadow">
             <p className="text-[10px] uppercase font-bold">Target Tabungan</p>
             <h2 className="text-lg font-bold">Rp {sisaTargetTabungan.toLocaleString('id-ID')}</h2>
         </div>
-        <div className="bg-orange-600 text-white p-3 rounded-lg text-center">
+        <div className="bg-orange-600 text-white p-3 rounded-lg text-center shadow">
             <p className="text-[10px] uppercase font-bold">Target Service</p>
             <h2 className="text-lg font-bold">Rp {sisaTargetService.toLocaleString('id-ID')}</h2>
         </div>
       </div>
 
-      <div className="space-y-2 mb-6">
-        <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
-        <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
-        <input className="border p-2 w-full rounded" placeholder="Tabungan Tambahan..." value={extra} onChange={(e) => setExtra(formatRupiah(e.target.value))} />
-        <button className="w-full bg-green-600 text-white p-2 rounded font-bold" onClick={handleProcess}>Proses Hari Ini</button>
+      <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #9ca3af', marginBottom: '1.5rem' }}>
+        <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
+        <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
+        <input style={{ border: '1px solid #9ca3af', padding: '0.5rem', width: '100%', borderRadius: '0.25rem', marginBottom: '0.5rem', color: '#000000' }} placeholder="Tabungan Tambahan..." value={extra} onChange={(e) => setExtra(formatRupiah(e.target.value))} />
+        <button style={{ width: '100%', backgroundColor: '#16a34a', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontWeight: 'bold' }} onClick={handleProcess}>Proses Hari Ini</button>
       </div>
 
       <div className="space-y-2">
         {Object.keys(grouped).map(date => (
-          <div key={date} className="border rounded bg-white">
-            <button className="w-full p-3 text-left font-bold bg-gray-100 flex justify-between" onClick={() => toggleDate(date)}>
+          <div key={date} style={{ border: '1px solid #d1d5db', borderRadius: '0.5rem', backgroundColor: '#ffffff', marginBottom: '0.5rem' }}>
+            <button style={{ width: '100%', padding: '0.75rem', textAlign: 'left', fontWeight: 'bold', backgroundColor: '#e5e7eb', color: '#000000', display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleDate(date)}>
               {date} <span>{openDates.includes(date) ? '▼' : '▶'}</span>
             </button>
             {openDates.includes(date) && (
-              <div className="p-4 border-t space-y-2 text-sm">
+              <div style={{ padding: '1rem', borderTop: '1px solid #d1d5db', color: '#000000', fontSize: '0.875rem' }}>
                 {grouped[date].map((item: any) => (
-                  <div key={item.id} className="space-y-2">
-                    <div className="flex justify-between"><span>Pemasukan:</span> <input className="border w-28 text-right px-1" defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
-                    <div className="flex justify-between"><span>Ongkos:</span> <input className="border w-28 text-right px-1" defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
-                    <div className="flex justify-between"><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
-                    <hr/><div className="flex justify-between"><span>Tabungan (20%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Service (5%):</span> <b>Rp {item.service.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Dana Darurat (2%):</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Tabungan Tambahan:</span> <input className="border w-28 text-right px-1" defaultValue={item.e.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} /></div>
-                    <div className="flex justify-between text-blue-700 font-bold"><span>Total Disisihkan:</span> <b>Rp {item.totalDisisihkan.toLocaleString()}</b></div>
-                    <div className="flex justify-between text-green-700 font-bold"><span>Saldo Bersih:</span> <b>Rp {item.saldoBersih.toLocaleString()}</b></div>
+                  <div key={item.id} style={{ marginBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Pemasukan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Ongkos:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tabungan:</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Service:</span> <b>Rp {item.service.toLocaleString()}</b></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Dana Darurat:</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Bersih:</span> <b style={{ color: '#15803d' }}>Rp {item.saldoBersih.toLocaleString()}</b></div>
+                    <button style={{ width: '100%', marginTop: '1rem', backgroundColor: '#ef4444', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold' }} onClick={() => deleteDate(date)}>HAPUS HARI INI</button>
                   </div>
                 ))}
-                <button className="w-full mt-4 bg-red-500 text-white p-2 rounded text-xs font-bold" onClick={() => deleteDate(date)}>HAPUS HARI INI</button>
               </div>
             )}
           </div>
