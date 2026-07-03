@@ -93,7 +93,7 @@ export default function Home() {
       <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
       
       <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 text-sm shadow-lg">
-        <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Ringkasan Dana Terkumpul:</h3>
+        <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Semagaat sayang -kia:</h3>
         <p>Tabungan Sekarang: <b className="text-blue-300">Rp {totalTabungan.toLocaleString('id-ID')}</b></p>
         <p>Service: <b className="text-orange-300">Rp {totalService.toLocaleString('id-ID')}</b></p>
         <p>Dana Darurat: <b className="text-green-300">Rp {totalDanaDarurat.toLocaleString('id-ID')}</b></p>
@@ -112,7 +112,7 @@ export default function Home() {
 
       <div className="space-y-2 mb-6 bg-white p-4 rounded shadow border">
         <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
-        <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
+        <input className="border p-2 w-full rounded" placeholder="Bensin dan Makan..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
         <input className="border p-2 w-full rounded" placeholder="Tabungan Tambahan..." value={extra} onChange={(e) => setExtra(formatRupiah(e.target.value))} />
         <button className="w-full bg-green-600 text-white p-2 rounded font-bold" onClick={handleProcess}>Proses Hari Ini</button>
       </div>
@@ -128,7 +128,7 @@ export default function Home() {
                 {grouped[date].map((item: any) => (
                   <div key={item.id} className="space-y-2">
                     <div className="flex justify-between"><span>Pemasukan:</span> <input className="border w-28 text-right px-1" defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
-                    <div className="flex justify-between"><span>Ongkos:</span> <input className="border w-28 text-right px-1" defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
+                    <div className="flex justify-between"><span>Bensin dan Makan:</span> <input className="border w-28 text-right px-1" defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
                     <hr/>
                     <div className="flex justify-between"><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Tabungan (20%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
