@@ -32,7 +32,6 @@ export default function Home() {
       return;
     }
 
-    // Hitung ulang akumulasi dari data yang ada
     let currentTotalService = data.reduce((sum, item) => sum + item.service, 0);
     const service = currentTotalService >= targetService ? 0 : p * 0.05;
     
@@ -77,7 +76,9 @@ export default function Home() {
   };
 
   const totalTabunganTerkumpul = data.reduce((sum, item) => sum + item.tabungan + item.e, 0);
-  const sisaTarget = Math.max(0, targetTabungan - totalTabunganTerkumpul);
+  const totalServiceTerkumpul = data.reduce((sum, item) => sum + item.service, 0);
+  const sisaTargetTabungan = Math.max(0, targetTabungan - totalTabunganTerkumpul);
+  const sisaTargetService = Math.max(0, targetService - totalServiceTerkumpul);
 
   const toggleDate = (date: string) => {
     setOpenDates(prev => prev.includes(date) ? prev.filter(d => d !== date) : [...prev, date]);
@@ -91,10 +92,19 @@ export default function Home() {
   return (
     <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen">
       <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
-      <div className="bg-blue-600 text-white p-4 rounded-lg mb-4">
-        <p className="text-sm">Sisa Target Tabungan 3jt:</p>
-        <h2 className="text-2xl font-bold">Rp {sisaTarget.toLocaleString('id-ID')}</h2>
+      
+      {/* Panel Target */}
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="bg-blue-600 text-white p-3 rounded-lg text-center">
+            <p className="text-[10px] uppercase font-bold">Target Tabungan</p>
+            <h2 className="text-lg font-bold">Rp {sisaTargetTabungan.toLocaleString('id-ID')}</h2>
+        </div>
+        <div className="bg-orange-600 text-white p-3 rounded-lg text-center">
+            <p className="text-[10px] uppercase font-bold">Target Service</p>
+            <h2 className="text-lg font-bold">Rp {sisaTargetService.toLocaleString('id-ID')}</h2>
+        </div>
       </div>
+
       <div className="space-y-2 mb-6">
         <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
         <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
