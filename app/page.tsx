@@ -132,13 +132,21 @@ export default function Home() {
               <div style={{ padding: '1rem', borderTop: '1px solid #d1d5db', color: '#000000', fontSize: '0.875rem' }}>
                 {grouped[date].map((item: any) => (
                   <div key={item.id} style={{ marginBottom: '0.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Pemasukan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Ongkos:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                        <span>Pemasukan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                        <span>Ongkos:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                        <span>Tabungan Tambahan:</span> <input style={{ border: '1px solid #9ca3af', width: '7rem', textAlign: 'right', color: '#000000' }} defaultValue={item.e.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} />
+                    </div>
+                    <hr style={{ margin: '0.5rem 0' }}/>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tabungan:</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Service:</span> <b>Rp {item.service.toLocaleString()}</b></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Dana Darurat:</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Bersih:</span> <b style={{ color: '#15803d' }}>Rp {item.saldoBersih.toLocaleString()}</b></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}><span>Total Bersih:</span> <b style={{ color: '#15803d' }}>Rp {item.saldoBersih.toLocaleString()}</b></div>
                     <button style={{ width: '100%', marginTop: '1rem', backgroundColor: '#ef4444', color: '#ffffff', padding: '0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold' }} onClick={() => deleteDate(date)}>HAPUS HARI INI</button>
                   </div>
                 ))}
