@@ -16,7 +16,6 @@ export default function Home() {
     if (saved) setData(JSON.parse(saved));
   }, []);
 
-  // ... (fungsi formatRupiah, handleProcess, updateItem, deleteDate, toggleDate tetap sama)
   const formatRupiah = (val: string) => {
     const number = val.replace(/\D/g, "");
     return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -27,10 +26,25 @@ export default function Home() {
     const o = parseFloat(ongkos.replace(/\./g, "")) || 0;
     const e = parseFloat(extra.replace(/\./g, "")) || 0;
     const date = new Date().toLocaleDateString("id-ID");
-    if (data.some(item => item.date === date)) { alert("Hari ini sudah ada input!"); return; }
+
+    if (data.some(item => item.date === date)) {
+      alert("Hari ini sudah ada input! Silakan edit di daftar bawah.");
+      return;
+    }
+
     let currentTotalService = data.reduce((sum, item) => sum + item.service, 0);
     const service = currentTotalService >= targetService ? 0 : p * 0.05;
-    const entry = { id: Date.now(), date, p, o, e, saldoKotor: p - o, tabungan: p * 0.2, service, danaDarurat: p * 0.02, totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e, saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e) };
+    
+    const entry = { 
+      id: Date.now(), date, p, o, e, 
+      saldoKotor: p - o,
+      tabungan: p * 0.2,
+      service,
+      danaDarurat: p * 0.02,
+      totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e,
+      saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e)
+    };
+    
     const newData = [entry, ...data];
     setData(newData);
     localStorage.setItem("keuangan-hamdan", JSON.stringify(newData));
@@ -40,6 +54,7 @@ export default function Home() {
   const updateItem = (id: number, key: string, val: string) => {
     const numVal = parseFloat(val.replace(/\./g, "")) || 0;
     let updatedData = data.map(item => (item.id === id ? { ...item, [key]: numVal } : item));
+    
     let totalServiceAccumulated = 0;
     updatedData = updatedData.sort((a, b) => a.id - b.id).map((item) => {
       const p = item.p || 0; const o = item.o || 0; const e = item.e || 0;
@@ -47,6 +62,7 @@ export default function Home() {
       totalServiceAccumulated += service;
       return { ...item, saldoKotor: p - o, tabungan: p * 0.2, service, danaDarurat: p * 0.02, totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e, saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e) };
     });
+
     const finalData = updatedData.sort((a, b) => b.id - a.id);
     setData(finalData);
     localStorage.setItem("keuangan-hamdan", JSON.stringify(finalData));
@@ -77,7 +93,7 @@ export default function Home() {
     <main className="p-4 max-w-lg mx-auto bg-gray-50 min-h-screen text-black">
       <h1 className="text-xl font-bold mb-4">Manajer Keuangan For Hamdan</h1>
       
-      {/* Ringkasan Dana */}
+      {/* Ringkasan */}
       <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 text-sm shadow-lg">
         <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Ringkasan Dana Terkumpul:</h3>
         <p>Tabungan Sekarang: <b className="text-blue-300">Rp {totalTabungan.toLocaleString('id-ID')}</b></p>
@@ -85,6 +101,7 @@ export default function Home() {
         <p>Dana Darurat: <b className="text-green-300">Rp {totalDanaDarurat.toLocaleString('id-ID')}</b></p>
       </div>
 
+      {/* Target */}
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="bg-blue-600 text-white p-3 rounded-lg text-center shadow-md">
             <p className="text-[10px] uppercase font-bold">Sisa Target Tabungan</p>
@@ -96,7 +113,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Input Section */}
+      {/* Input */}
       <div className="space-y-2 mb-6 bg-white p-4 rounded shadow border">
         <input className="border p-2 w-full rounded" placeholder="Pemasukan..." value={pemasukan} onChange={(e) => setPemasukan(formatRupiah(e.target.value))} />
         <input className="border p-2 w-full rounded" placeholder="Ongkos Keluar..." value={ongkos} onChange={(e) => setOngkos(formatRupiah(e.target.value))} />
@@ -104,7 +121,7 @@ export default function Home() {
         <button className="w-full bg-green-600 text-white p-2 rounded font-bold" onClick={handleProcess}>Proses Hari Ini</button>
       </div>
 
-      {/* List Data Section (tetap seperti sebelumnya) */}
+      {/* List */}
       <div className="space-y-2">
         {Object.keys(grouped).map(date => (
           <div key={date} className="border rounded bg-white shadow-sm">
