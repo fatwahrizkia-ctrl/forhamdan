@@ -131,10 +131,10 @@ export default function Home() {
                     <div className="flex justify-between"><span>Bensin dan Makan:</span> <input className="border w-28 text-right px-1" defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
                     <hr/>
                     <div className="flex justify-between"><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Tabungan (20%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Tabungan (30%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Tab. Tambahan:</span> <input className="border w-28 text-right px-1" defaultValue={item.e !== undefined ? item.e.toLocaleString('id-ID') : "0"} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} /></div>
-                    <div className="flex justify-between"><span>Service (5%):</span> <b>Rp {item.service.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Dana Darurat (2%):</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Service (10%):</span> <b>Rp {item.service.toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Dana Darurat (5%):</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
                     <div className="flex justify-between text-blue-700 font-bold"><span>Total Disisihkan:</span> <b>Rp {item.totalDisisihkan.toLocaleString()}</b></div>
                     <div className="flex justify-between text-green-700 font-bold text-lg mt-2">
                         <span>Total Bersih:</span> <b>Rp {item.saldoBersih.toLocaleString()}</b>
