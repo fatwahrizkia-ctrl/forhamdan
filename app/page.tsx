@@ -33,16 +33,23 @@ export default function Home() {
     }
 
     let currentTotalService = data.reduce((sum, item) => sum + item.service, 0);
-    const service = currentTotalService >= targetService ? 0 : p * 0.05;
+    
+    // Logika Baru
+    const saldoKotor = p - o;
+    const tabungan = saldoKotor * 0.3;
+    const sisaSetelahTabungan = saldoKotor - tabungan;
+    const service = currentTotalService >= targetService ? 0 : sisaSetelahTabungan * 0.1;
+    const sisaSetelahService = sisaSetelahTabungan - service;
+    const danaDarurat = sisaSetelahService * 0.05;
     
     const entry = { 
       id: Date.now(), date, p, o, e, 
-      saldoKotor: p - o,
-      tabungan: p * 0.2,
+      saldoKotor,
+      tabungan,
       service,
-      danaDarurat: p * 0.02,
-      totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e,
-      saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e)
+      danaDarurat,
+      totalDisisihkan: tabungan + service + danaDarurat + e,
+      saldoBersih: saldoKotor - (tabungan + service + danaDarurat + e)
     };
     
     const newData = [entry, ...data];
@@ -58,9 +65,25 @@ export default function Home() {
     let totalServiceAccumulated = 0;
     updatedData = updatedData.sort((a, b) => a.id - b.id).map((item) => {
       const p = item.p || 0; const o = item.o || 0; const e = item.e || 0;
-      const service = totalServiceAccumulated >= targetService ? 0 : p * 0.05;
+      
+      const saldoKotor = p - o;
+      const tabungan = saldoKotor * 0.3;
+      const sisaSetelahTabungan = saldoKotor - tabungan;
+      const service = totalServiceAccumulated >= targetService ? 0 : sisaSetelahTabungan * 0.1;
+      const sisaSetelahService = sisaSetelahTabungan - service;
+      const danaDarurat = sisaSetelahService * 0.05;
+      
       totalServiceAccumulated += service;
-      return { ...item, saldoKotor: p - o, tabungan: p * 0.2, service, danaDarurat: p * 0.02, totalDisisihkan: (p * 0.2) + service + (p * 0.02) + e, saldoBersih: (p - o) - ((p * 0.2) + service + (p * 0.02) + e) };
+      
+      return { 
+        ...item, 
+        saldoKotor, 
+        tabungan, 
+        service, 
+        danaDarurat, 
+        totalDisisihkan: tabungan + service + danaDarurat + e, 
+        saldoBersih: saldoKotor - (tabungan + service + danaDarurat + e) 
+      };
     });
 
     const finalData = updatedData.sort((a, b) => b.id - a.id);
@@ -94,19 +117,19 @@ export default function Home() {
       
       <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 text-sm shadow-lg">
         <h3 className="font-bold mb-2 border-b border-gray-600 pb-1">Semangat Sayang -kia:</h3>
-        <p>Tabungan Sekarang: <b className="text-blue-300">Rp {totalTabungan.toLocaleString('id-ID')}</b></p>
-        <p>Service: <b className="text-orange-300">Rp {totalService.toLocaleString('id-ID')}</b></p>
-        <p>Dana Darurat: <b className="text-green-300">Rp {totalDanaDarurat.toLocaleString('id-ID')}</b></p>
+        <p>Tabungan Sekarang: <b className="text-blue-300">Rp {Math.round(totalTabungan).toLocaleString('id-ID')}</b></p>
+        <p>Service: <b className="text-orange-300">Rp {Math.round(totalService).toLocaleString('id-ID')}</b></p>
+        <p>Dana Darurat: <b className="text-green-300">Rp {Math.round(totalDanaDarurat).toLocaleString('id-ID')}</b></p>
       </div>
 
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="bg-blue-600 text-white p-3 rounded-lg text-center shadow-md">
             <p className="text-[10px] uppercase font-bold">Sisa Target Tabungan</p>
-            <h2 className="text-lg font-bold">Rp {sisaTargetTabungan.toLocaleString('id-ID')}</h2>
+            <h2 className="text-lg font-bold">Rp {Math.round(sisaTargetTabungan).toLocaleString('id-ID')}</h2>
         </div>
         <div className="bg-orange-600 text-white p-3 rounded-lg text-center shadow-md">
             <p className="text-[10px] uppercase font-bold">Sisa Target Service</p>
-            <h2 className="text-lg font-bold">Rp {sisaTargetService.toLocaleString('id-ID')}</h2>
+            <h2 className="text-lg font-bold">Rp {Math.round(sisaTargetService).toLocaleString('id-ID')}</h2>
         </div>
       </div>
 
@@ -130,14 +153,14 @@ export default function Home() {
                     <div className="flex justify-between"><span>Pemasukan:</span> <input className="border w-28 text-right px-1" defaultValue={item.p.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'p', e.target.value)} /></div>
                     <div className="flex justify-between"><span>Bensin dan Makan:</span> <input className="border w-28 text-right px-1" defaultValue={item.o.toLocaleString('id-ID')} onBlur={(e) => updateItem(item.id, 'o', e.target.value)} /></div>
                     <hr/>
-                    <div className="flex justify-between"><span>Saldo Kotor:</span> <b>Rp {item.saldoKotor.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Tabungan (30%):</span> <b>Rp {item.tabungan.toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Saldo Kotor:</span> <b>Rp {Math.round(item.saldoKotor).toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Tabungan (30%):</span> <b>Rp {Math.round(item.tabungan).toLocaleString()}</b></div>
                     <div className="flex justify-between"><span>Tab. Tambahan:</span> <input className="border w-28 text-right px-1" defaultValue={item.e !== undefined ? item.e.toLocaleString('id-ID') : "0"} onBlur={(e) => updateItem(item.id, 'e', e.target.value)} /></div>
-                    <div className="flex justify-between"><span>Service (10%):</span> <b>Rp {item.service.toLocaleString()}</b></div>
-                    <div className="flex justify-between"><span>Dana Darurat (5%):</span> <b>Rp {item.danaDarurat.toLocaleString()}</b></div>
-                    <div className="flex justify-between text-blue-700 font-bold"><span>Total Disisihkan:</span> <b>Rp {item.totalDisisihkan.toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Service (10%):</span> <b>Rp {Math.round(item.service).toLocaleString()}</b></div>
+                    <div className="flex justify-between"><span>Dana Darurat (5%):</span> <b>Rp {Math.round(item.danaDarurat).toLocaleString()}</b></div>
+                    <div className="flex justify-between text-blue-700 font-bold"><span>Total Disisihkan:</span> <b>Rp {Math.round(item.totalDisisihkan).toLocaleString()}</b></div>
                     <div className="flex justify-between text-green-700 font-bold text-lg mt-2">
-                        <span>Total Bersih:</span> <b>Rp {item.saldoBersih.toLocaleString()}</b>
+                        <span>Total Bersih:</span> <b>Rp {Math.round(item.saldoBersih).toLocaleString()}</b>
                     </div>
                     <button className="w-full mt-4 bg-red-500 text-white p-2 rounded text-xs font-bold" onClick={() => deleteDate(date)}>HAPUS HARI INI</button>
                   </div>
